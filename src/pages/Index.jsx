@@ -16,8 +16,27 @@ const MediaViewer = () => {
       ],
     },
   ]);
+  const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [currentItem, setCurrentItem] = useState(mediaItems[0]);
   const [currentVersion, setCurrentVersion] = useState(currentItem.versions[0]);
+
+  const handlePrevItem = () => {
+    const prevIndex = currentItemIndex - 1;
+    if (prevIndex >= 0) {
+      setCurrentItemIndex(prevIndex);
+      setCurrentItem(mediaItems[prevIndex]);
+      setCurrentVersion(mediaItems[prevIndex].versions[0]);
+    }
+  };
+
+  const handleNextItem = () => {
+    const nextIndex = currentItemIndex + 1;
+    if (nextIndex < mediaItems.length) {
+      setCurrentItemIndex(nextIndex);
+      setCurrentItem(mediaItems[nextIndex]);
+      setCurrentVersion(mediaItems[nextIndex].versions[0]);
+    }
+  };
   const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
   const toast = useToast();
 
@@ -140,6 +159,14 @@ const MediaViewer = () => {
               </Menu>
             </Box>
             <Box>
+              <Button onClick={handlePrevItem} isDisabled={currentItemIndex === 0}>
+                Prev
+              </Button>
+              <Button onClick={handleNextItem} isDisabled={currentItemIndex === mediaItems.length - 1}>
+                Next
+              </Button>
+            </Box>
+            <Box>
               <Text>Version: {currentVersion.name}</Text>
             </Box>
             <Box>
@@ -164,6 +191,27 @@ const MediaViewer = () => {
           </Box>
         )}
       </Flex>
+      <Box bg="gray.100" p={4}>
+        <Flex justifyContent="center">
+          {mediaItems.map((item, index) => (
+            <Box
+              key={item.id}
+              w="80px"
+              h="80px"
+              m={2}
+              borderWidth={2}
+              borderColor={index === currentItemIndex ? "blue.500" : "transparent"}
+              onClick={() => {
+                setCurrentItemIndex(index);
+                setCurrentItem(item);
+                setCurrentVersion(item.versions[0]);
+              }}
+            >
+              {renderMedia(item)}
+            </Box>
+          ))}
+        </Flex>
+      </Box>
 
       <Modal isOpen={isModalOpen} onClose={onModalClose}>
         <ModalOverlay />
