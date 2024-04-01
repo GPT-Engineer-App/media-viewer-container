@@ -5,14 +5,32 @@ import { FaBars, FaPlus, FaEdit, FaTrash, FaCode } from "react-icons/fa";
 const MediaViewer = () => {
   const [layout, setLayout] = useState("default");
   const [mediaItems, setMediaItems] = useState([
-    { id: 1, type: "image", src: "https://images.unsplash.com/photo-1615184697985-c9bde1b07da7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGFydHxlbnwwfHx8fDE3MTE5NDE0MDJ8MA&ixlib=rb-4.0.3&q=80&w=1080", versions: [{ id: 1, name: "Original" }] },
+    {
+      id: 1,
+      type: "image",
+      src: "https://images.unsplash.com/photo-1615184697985-c9bde1b07da7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGFydHxlbnwwfHx8fDE3MTE5NDE0MDJ8MA&ixlib=rb-4.0.3&q=80&w=1080",
+      versions: [
+        { id: 1, name: "Original" },
+        { id: 2, name: "Edited" },
+      ],
+    },
     {
       id: 2,
-      type: "video",
-      src: "https://example.com/video.mp4",
+      type: "image",
+      src: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMGFydHxlbnwwfHx8fDE2ODYyNDk4NTN8MA&ixlib=rb-4.0.3&q=80&w=1080",
       versions: [
-        { id: 1, name: "HD" },
-        { id: 2, name: "SD" },
+        { id: 1, name: "Original" },
+        { id: 2, name: "Grayscale" },
+        { id: 3, name: "Inverted" },
+      ],
+    },
+    {
+      id: 3,
+      type: "image",
+      src: "https://images.unsplash.com/photo-1579783483458-83d02161294e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMGFydHxlbnwwfHx8fDE2ODYyNDk4NTN8MA&ixlib=rb-4.0.3&q=80&w=1080",
+      versions: [
+        { id: 1, name: "Original" },
+        { id: 2, name: "Saturated" },
       ],
     },
   ]);
@@ -115,11 +133,18 @@ const MediaViewer = () => {
           </Box>
         )}
         <Flex direction="column" flex={1}>
-          <Box flex={1} p={4} overflow="auto">
+          <Box flex={1} p={4}>
             <Flex justifyContent="center" alignItems="center" h="100%">
               {renderMedia(currentItem)}
             </Flex>
           </Box>
+          <Flex p={4} overflowX="auto">
+            {mediaItems.map((item) => (
+              <Box key={item.id} w="100px" h="100px" bg="gray.200" mr={2} cursor="pointer" onClick={() => setCurrentItem(item)}>
+                <Image src={item.src} alt="Preview" objectFit="cover" w="100%" h="100%" />
+              </Box>
+            ))}
+          </Flex>
           <Flex bg="gray.100" p={4} justifyContent="space-between" alignItems="center">
             <Box>
               <Menu>
@@ -149,7 +174,7 @@ const MediaViewer = () => {
                 </MenuButton>
                 <MenuList>
                   {currentItem.versions.map((version) => (
-                    <MenuItem key={version.id} onClick={() => handleVersionChange(version)}>
+                    <MenuItem key={version.id} onClick={() => handleVersionChange(version)} bg={version.id === currentVersion.id ? "blue.100" : "white"}>
                       {version.name}
                     </MenuItem>
                   ))}
